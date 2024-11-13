@@ -1,0 +1,92 @@
+{% block title %}Display all task{% endblock title %} 
+{% load static %}
+    <section class="section main-section">  
+        <div class="grid gap-6 grid-cols-1 md:grid-cols-3 mb-6">
+            <div class='card'>
+                <div class="card-content">
+                    <div class="flex items-center justify-between">
+                        <div class="widget-label" style="margin-top: 110px;">
+                            <table class="table table-striped table-hover mx-auto px-auto">
+                                <thead bgcolor="#969cad">
+                                    <th>TASK NAME</th>
+                                    <th>TASK DESCRIPTION</th>
+                                    <th> DATE CREATED</th>
+                                    <th>DUE DATE</th>
+                                    <th>STATUS</th>
+                                    <th>MARK AS COMPLETE</th>
+                                    <th>EDIT TASK</th>
+                                    <th>DELETE TASK</th>
+                                </thead>
+
+                                {% if tasks %}
+                                {% for task in tasks %}
+                                    <tr>
+                                        <td>
+                                            <span style="color: #969cad;" class= "font-weight-bold">
+                                                {{task.task_name}}
+                                            </span>
+                                        </td>
+                    
+                                        <td>
+                                            <span style="color: #969cad;" class= "font-weight-bold">
+                                                {{task.task_description}}
+                                            </span>
+                                        </td>
+
+                                        <td>
+                                            <span style="color: #969cad;" class= "font-weight-bold">
+                                                {{task.date_created}}
+                                            </span>
+                                        </td>
+
+                                        <td>
+                                            <span style="color: #969cad;" class= "font-weight-bold">
+                                                {{task.due_date}}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            {% if task.completed_task == False %}
+                                            <span style="color: #969cad;" class= "font-weight-bold">
+                                                Not yet completed <br> <br>
+                                            </span>
+                                            
+                                            {% else %}
+                                            <span style="color: #969cad;" class= "font-weight-bold">
+                                                Completed
+                                            </span>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            {% if task.completed_task == True  %}
+                                            Completed
+                                            {% else %}
+                                            <form method="post" action="{% url 'mark_as_completed' request.user.id task.task_id %}">
+                                                {% csrf_token %}
+                                                <label>
+                                                    <span>Have you completed it? if Yes</span>
+                                                    <input type="radio" name="completed" onclick="this.form.submit()"> Mark as Completed
+                                                </label>
+                                            </form>
+                                            {% endif %} 
+                                        </td>
+                                        <td>
+                                            <a href="{% url 'edit_task' request.user.id  task.task_id %}">
+                                                <span style="color: #0e399c;" class= "font-weight-bold">
+                                                    Edit task
+                                                </span>
+                                            </a>
+                                        </td>
+                                        <td><a href="{% url "delete_task" request.user.id task.task_id %}"> Delete</a></td>
+                                    </tr>
+                                    
+                                {% endfor %}
+                                {% endif %}
+                                    
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>   
+
